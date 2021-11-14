@@ -1,35 +1,44 @@
+import { Fragment } from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import { useGetContactsQuery, useDeleteContactMutation } from "../../redux/service";
 
 import styles from './ContactList.module.css';
 import actions from '../../redux/action-creators';
-
+import Spinner from "../Spinner";
+import ContactListItem from "../ContactListItem";
 
 function ContactList() {
-    const contacts = useSelector(({contacts: {items, filter}}) => getFilteredContacts(items, filter));
-    const dispatch = useDispatch();
+    // const contacts = useSelector(({contacts: {items, filter}}) => getFilteredContacts(items, filter));
+    // const dispatch = useDispatch();
+    const filter = useSelector(({contacts}) => contacts.filter);
+    const { data, isSuccess, isLoading } = useGetContactsQuery();
+    // const [deleteContact, {isLoading}] = useDeleteContactMutation();
+
+    const filtered = isSuccess && getFilteredContacts(data, filter);
 
     return (
-        <ul className={styles.list}>
-            {contacts.map(({uid, name, number}) => {
-                return (
-                    <li className={styles.item} key={uid}>
-                        <div className={styles.wrapper}>
-                            <p className={styles.name}>{name}</p>
-                            <span className={styles.number}>{number}</span>
-                            <button className={styles.button}
-                                    onClick={() => dispatch(actions.deleteUsersContact(uid))}>Delete
-                            </button>
-                        </div>
-                    </li>
-                );
-            })}
-        </ul>
+      <Fragment>
+          {isLoading && <Spinner/>}
+          {isSuccess &&
+          <ul className={styles.list}>
+              {filtered.map(({ id, name, phone }) => {
+                  return (
+                    <ContactListItem
+                        key={id}
+                        id={id}
+                        name={name}
+                        phone={phone}
+                    />
+                  );
+              })}
+          </ul>}
+      </Fragment>
     );
 }
 
 function getFilteredContacts(items, filter) {
     return items.filter(item => {
-        return item.name.toLowerCase().includes(filter.toLowerCase())
+        return item.name.toLowerCase().includes(filter.toLowerCase());
     })
 }
 
