@@ -1,21 +1,17 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useSelector, useDispatch } from 'react-redux';
-import {useCreateContactMutation, useGetContactsQuery} from "../../redux/service";
-
 import styles from './ContactForm.module.css';
-import actions from '../../redux/action-creators'
+
+import {useCreateContactMutation, useGetContactsQuery} from "../../redux/service";
 
 
 function ContactForm() {
-
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
+
     const { data, isSuccess  } = useGetContactsQuery();
     const [createContact] = useCreateContactMutation();
     const existingContacts = isSuccess && data;
-    const dispatch = useDispatch();
-
 
     const onInputChange = event => {
         const { name, value } = event.target;
@@ -39,8 +35,6 @@ function ContactForm() {
         setPhone('');
     }
 
-    const onFormSubmit = contact => dispatch(actions.addUsersContact(contact));
-
     const HandleFormSubmit = event => {
         event.preventDefault();
         
@@ -52,7 +46,6 @@ function ContactForm() {
             setName('');
             return;
         }
-        onFormSubmit({name, phone});
         createContact({name, phone});
         toast.success(`${name}'s contact is added to directory.`);
         onInputReset();

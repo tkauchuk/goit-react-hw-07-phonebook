@@ -1,6 +1,7 @@
-import { useDeleteContactMutation } from "../../redux/service";
 import { toast } from "react-toastify";
 import styles from "./ContactListItem.module.css";
+
+import { useDeleteContactMutation } from "../../redux/service";
 
 
 function ContactListItem({id, name, phone}) {

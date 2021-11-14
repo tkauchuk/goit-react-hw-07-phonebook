@@ -5,8 +5,7 @@ import actions from '../../redux/action-creators';
 import {useGetContactsQuery} from "../../redux/service";
 
 function Filter() {
-    const contacts = useSelector(state => state.contacts.items);
-    const filterValue = useSelector(state => state.contacts.filter);
+    const filter = useSelector(state => state.filter);
     const dispatch = useDispatch();
 
     const { data, isSuccess } = useGetContactsQuery();
@@ -19,7 +18,7 @@ function Filter() {
           className={styles.input}
           type="text"
           name="filter"
-          value={filterValue}
+          value={filter}
           autoComplete="off"
           disabled={!enabled}
           onChange={e => dispatch(actions.changeContactsFilter(e.target.value))}

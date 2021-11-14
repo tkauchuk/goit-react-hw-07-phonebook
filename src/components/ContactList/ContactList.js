@@ -1,19 +1,15 @@
 import { Fragment } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { useGetContactsQuery, useDeleteContactMutation } from "../../redux/service";
-
+import { useSelector } from 'react-redux';
 import styles from './ContactList.module.css';
-import actions from '../../redux/action-creators';
+
+import { useGetContactsQuery } from "../../redux/service";
+
 import Spinner from "../Spinner";
 import ContactListItem from "../ContactListItem";
 
 function ContactList() {
-    // const contacts = useSelector(({contacts: {items, filter}}) => getFilteredContacts(items, filter));
-    // const dispatch = useDispatch();
-    const filter = useSelector(({contacts}) => contacts.filter);
+    const filter = useSelector(state => state.filter);
     const { data, isSuccess, isLoading } = useGetContactsQuery();
-    // const [deleteContact, {isLoading}] = useDeleteContactMutation();
-
     const filtered = isSuccess && getFilteredContacts(data, filter);
 
     return (
